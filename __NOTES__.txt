@@ -1,0 +1,6 @@
+option ( STATICLIBS "Build static libraries" ON )
+option ( BUILD_TESTS "Build unit tests with Boost Unit Test framework" ON )
+option ( DOCUMENTATION "Generate API documentation with Doxygen" ON )
+option ( PYTHON_BINDINGS "Build python bindings via swig" ON )
+option ( LINK_PYTHON_LIBRARY "Link against python libraries" ON )
+option ( FTDIPP "Build C++ binding library libftdi1++" ON )

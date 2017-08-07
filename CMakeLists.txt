@@ -43,7 +43,7 @@ ENDIF(${CMAKE_BUILD_TOOL} MATCHES "(msdev|VCExpress|devenv)")
 #
 # Include the projects in the subdirectories.
 #
-ADD_SUBDIRECTORY(external)
+ADD_SUBDIRECTORY(luaftdi)
 
 #----------------------------------------------------------------------------
 

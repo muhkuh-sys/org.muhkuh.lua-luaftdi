@@ -11,15 +11,15 @@ rm -rf ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/external
 mkdir -p ${BUILD_DIR}/build_requirements
-mkdir -p ${BUILD_DIR}/curl
+mkdir -p ${BUILD_DIR}/luaftdi
 
 
 # Get the build requirements.
-#pushd ${BUILD_DIR}/build_requirements
-#cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${PRJ_DIR}
-#make
-#lua5.1 ${JONCHKI} --verbose info --syscfg ${PRJ_DIR}/jonchki/jonchkisys.cfg --prjcfg ${PRJ_DIR}/jonchki/jonchkicfg.xml ${JONCHKI_SYSTEM} --build-dependencies curl/curl-*.xml
-#popd
+pushd ${BUILD_DIR}/build_requirements
+cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${PRJ_DIR}
+make
+lua5.1 ${JONCHKI} --verbose info --syscfg ${PRJ_DIR}/jonchki/jonchkisys.cfg --prjcfg ${PRJ_DIR}/jonchki/jonchkicfg.xml ${JONCHKI_SYSTEM} --build-dependencies luaftdi/luaftdi-*.xml
+popd
 
 # Build the external components.
 pushd ${BUILD_DIR}/external
@@ -27,9 +27,9 @@ cmake -DBUILDCFG_ONLY_JONCHKI_CFG="ON" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILE
 make
 popd
 
-# Build the CURL library.
-#pushd ${BUILD_DIR}/curl
-#cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${CMAKE_MODULES} ${PRJ_DIR}
-#make
-#make install DESTDIR=${PWD}/install
-#popd
+# Build the luaftdi library.
+pushd ${BUILD_DIR}/luaftdi
+cmake -DBUILDCFG_LUA_USE_SYSTEM="OFF" -DBUILDCFG_LUA_VERSION="5.1" -DCMAKE_INSTALL_PREFIX="" ${CMAKE_COMPILER} ${PRJ_DIR}
+make
+make install DESTDIR=${PWD}/install
+popd

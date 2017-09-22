@@ -15,7 +15,7 @@ SET(INSTALL_UBUNTU_1704_X86_64 "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/lua5.
 INCLUDE(${INSTALL_WINDOWS_X86}/org.muhkuh.lua-luaftdi.version)
 SET(PROJECT_VERSION ${org.muhkuh.lua-luaftdi_VERSION})
 
-SET(CPACK_OUTPUT_FILE_PREFIX targets/jonchki/repository/org/muhkuh/lua/luaftdi/${PROJECT_VERSION})
+SET(CPACK_OUTPUT_FILE_PREFIX ../jonchki/repository/org/muhkuh/lua/luaftdi/${PROJECT_VERSION})
 SET(CPACK_INCLUDE_TOPLEVEL_DIRECTORY FALSE)
 SET(CPACK_PACKAGE_FILE_NAME "lua5.1-luaftdi-${PROJECT_VERSION}")
 

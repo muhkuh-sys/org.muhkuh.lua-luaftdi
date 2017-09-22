@@ -82,22 +82,22 @@ pushd build/org.muhkuh.lua-lua5.1-luaftdi
 cmake -DCMAKE_INSTALL_PREFIX="" ../../luaftdi/installer/lua5.1
 make
 make package
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.1-luaftdi-*.xml
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.1-luaftdi-*.tar.xz
 popd
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.1-luaftdi-*.xml
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.1-luaftdi-*.tar.xz
 
 pushd build/org.muhkuh.lua-lua5.2-luaftdi
 cmake -DCMAKE_INSTALL_PREFIX="" ../../luaftdi/installer/lua5.2
 make
 make package
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.2-luaftdi-*.xml
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.2-luaftdi-*.tar.xz
 popd
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.2-luaftdi-*.xml
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.2-luaftdi-*.tar.xz
 
 pushd build/org.muhkuh.lua-lua5.3-luaftdi
 cmake -DCMAKE_INSTALL_PREFIX="" ../../luaftdi/installer/lua5.3
 make
 make package
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.3-luaftdi-*.xml
-python2.7 ../../cmake/tools/generate_hash.py targets/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.3-luaftdi-*.tar.xz
 popd
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.3-luaftdi-*.xml
+python2.7 cmake/tools/generate_hash.py build/jonchki/repository/org/muhkuh/lua/luaftdi/*/lua5.3-luaftdi-*.tar.xz

@@ -2,6 +2,8 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
 
 PROJECT("org.muhkuh.lua-lua5.2-luaftdi-artifact")
 
+INCLUDE(../../../cmake/version.cmake)
+
 SET(INSTALL_WINDOWS_X86        "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/lua5.2/windows_x86")
 SET(INSTALL_WINDOWS_X86_64     "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/lua5.2/windows_x86_64")
 SET(INSTALL_UBUNTU_1404_X86    "${CMAKE_CURRENT_SOURCE_DIR}/../../../build/lua5.2/ubuntu_1404_x86")

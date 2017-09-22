@@ -52,4 +52,8 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 		ADD_TEST(NAME luaftdi_MinGW_DLL_dependencies
 		         COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tests/mingw_dll_dependencies.py -u lua5.1 -u lua5.2 -u lua5.3 $<TARGET_FILE:TARGET_luaftdi>)
 	ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+
+	# Write a version file.
+	FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/install/org.muhkuh.lua-luaftdi.version "SET(org.muhkuh.lua-luaftdi_VERSION ${PROJECT_VERSION})")
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/install/org.muhkuh.lua-luaftdi.version DESTINATION ".")
 ENDIF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))

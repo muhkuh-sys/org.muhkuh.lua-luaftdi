@@ -7,7 +7,7 @@ FIND_PACKAGE(SWIG REQUIRED)
 INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/version.cmake)
 
 # Filter the jonchki configuration.
-CONFIGURE_FILE(installer/luaftdi.xml
+CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/luaftdi.xml
                ${CMAKE_CURRENT_BINARY_DIR}/luaftdi-${PROJECT_VERSION}.xml
                @ONLY)
 

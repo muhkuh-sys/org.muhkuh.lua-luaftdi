@@ -45,6 +45,9 @@ fi
 echo "PROJECT_VERSION_VCS: ${PROJECT_VERSION_VCS}"
 echo "PROJECT_VERSION_VCS_LONG: ${PROJECT_VERSION_VCS_LONG}"
 
+# Get the project version somewhere.
+PROJECT_VERSION=1.0.0
+
 # Errors are fatal from now on.
 set -e
 
@@ -63,7 +66,7 @@ JONCHKI=${BUILD_DIR}/jonchki-0.0.1.1/jonchki
 
 # Write the GIT version into the template.
 rm -f ${BUILD_DIR}/luaftdi-examples.xml
-sed --expression="s/\${PROJECT_VERSION_VCS}/${PROJECT_VERSION_VCS}/" ${PRJ_DIR}/examples/jonchki/luaftdi-examples.xml >${BUILD_DIR}/luaftdi-examples.xml
+sed --expression="s/\${PROJECT_VERSION}/${PROJECT_VERSION}/" --expression="s/\${PROJECT_VERSION_VCS}/${PROJECT_VERSION_VCS}/" ${PRJ_DIR}/examples/jonchki/luaftdi-examples.xml >${BUILD_DIR}/luaftdi-examples.xml
 
 # Remove all working folders and re-create them.
 rm -rf ${BUILD_DIR}/windows_32bit

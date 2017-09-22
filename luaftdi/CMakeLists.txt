@@ -25,13 +25,16 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Select the LUA version.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_lua.cmake)
 
+	SET(libusb_DIR "${CMAKE_BINARY_DIR}/../../external/libusb/install/cmake")
+	FIND_PACKAGE(libusb CONFIG REQUIRED)
+
 	INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../external/libftdi/libftdi1-1.3/src/TARGET_libftdi1/src)
+	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../../external/libftdi/libftdi1-1.3/src/TARGET_libftdi1/src)
 
 	SET_SOURCE_FILES_PROPERTIES(ftdi1.i PROPERTIES CPLUSPLUS OFF)
 	SET_SOURCE_FILES_PROPERTIES(ftdi1.i PROPERTIES SWIG_FLAGS "")
 	SWIG_ADD_MODULE(TARGET_luaftdi lua ftdi1.i)
-	SWIG_LINK_LIBRARIES(TARGET_luaftdi ${LUA_LIBRARIES})
+	SWIG_LINK_LIBRARIES(TARGET_luaftdi ${LUA_LIBRARIES} ${CMAKE_BINARY_DIR}/../../external/libftdi/install/usr/local/lib/libftdi1.a libusb::TARGET_libusb)
 
 	# Set the name of the output file to "luaftdi".
 	SET_TARGET_PROPERTIES(TARGET_luaftdi PROPERTIES PREFIX "" OUTPUT_NAME "luaftdi")

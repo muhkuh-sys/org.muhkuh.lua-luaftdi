@@ -53,11 +53,13 @@ lxc file push build/build_windows_x86_64_lua5.3.tar.gz ${CONTAINER}/tmp/work/bui
 lxc exec ${CONTAINER} -- bash -c 'cd /tmp/work && bash .build04_artefacts.sh'
 
 # Get all artifacts.
-FILELIST=`lxc exec ${CONTAINER} -- bash -c 'find "/tmp/work" -path "/tmp/work/build/org.muhkuh.lua-lua*-luaftdi/targets/jonchki/repository/org/muhkuh/lua/luaftdi/*" -type f'`
+FILELIST=`lxc exec ${CONTAINER} -- bash -c 'find "/tmp/work" -path "/tmp/work/build/jonchki/repository/org/muhkuh/lua/luaftdi/*" -type f'`
 echo ${FILELIST}
 for strAbsolutePath in ${FILELIST}; do
 	echo "Pull ${strAbsolutePath}"
-	lxc file pull ${CONTAINER}${strAbsolutePath} build/
+	RELP=`lxc exec ${CONTAINER} -- bash -c "realpath --relative-to=/tmp/work ${strAbsolutePath}"`
+	RELD=`dirname ${RELP}`
+	lxc file pull ${CONTAINER}${strAbsolutePath} ${RELD}/
 done
 
 # Stop and remove the container.

@@ -18,11 +18,11 @@ mkdir -p ${BUILD_DIR}/lua5.3/build_requirements
 mkdir -p ${BUILD_DIR}/lua5.3/luaftdi
 
 
-# Install jonchki v0.0.1.1 .
-python2.7 jonchki/jonchkihere.py --jonchki-version 0.0.1.1 ${BUILD_DIR}
+# Install jonchki v0.0.2.1 .
+python2.7 jonchki/jonchkihere.py --jonchki-version 0.0.2.1 --local-archives ${PRJ_DIR}/jonchki/local_archives ${BUILD_DIR}
 
 # This is the path to the jonchki tool.
-JONCHKI=${BUILD_DIR}/jonchki-0.0.1.1/jonchki
+JONCHKI=${BUILD_DIR}/jonchki-0.0.2.1/jonchki
 
 
 # Build the external components.

@@ -7,7 +7,7 @@ INCLUDE(ExternalProject)
 # Python is used for some test scripts.
 FIND_PACKAGE(PythonInterp 2.7 REQUIRED)
 
-SET(VERSION_EXTERNAL "1.3")
+SET(VERSION_EXTERNAL "1.4")
 
 
 #----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ ENDIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 ExternalProject_Add(TARGET_libftdi1
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-${VERSION_EXTERNAL}
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/libftdi1-${VERSION_EXTERNAL}.tar.bz2
-                    URL_HASH SHA1=ff3bdc8ec6f9e0fffc735e2b4708fe574289107f
+                    URL_HASH SHA1=5b14cebab8168e12dd6c2b5325a29ad93ed40f3d
                     PATCH_COMMAND "${PYTHON_EXECUTABLE}" ${CMAKE_HOME_DIRECTORY}/cmake/tools/apply_patches.py --working-folder ${CMAKE_CURRENT_BINARY_DIR}/libftdi1-${VERSION_EXTERNAL}/src/TARGET_libftdi1 --patch-folder ${CMAKE_CURRENT_SOURCE_DIR}/patches --strip 1
                     CMAKE_ARGS ${PRJ_CMAKE_ARGS}
                     INSTALL_COMMAND make install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}/install

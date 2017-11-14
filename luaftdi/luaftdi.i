@@ -173,5 +173,7 @@
 /* Do not wrap the "iterator_next" method. It makes only sense in the closure function and shoud not be called directly. */
 %ignore List::iterator_next;
 
+/* Do not wrap the "get_usb_device" method. It is used only internally to communicate between the ListEntry and the Context class. */
+%ignore ListEntry::get_usb_device;
 
 %include "wrapper.h"

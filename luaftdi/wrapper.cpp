@@ -339,6 +339,13 @@ void ListEntry::get_serial(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT_LIST, uns
 
 
 
+struct libusb_device *ListEntry::get_usb_device(void)
+{
+	return m_ptUsbDevice;
+}
+
+
+
 List::List(struct ftdi_context *ptContext, struct ftdi_device_list *ptDevlist)
  : m_ptContext(ptContext)
  , m_ptDevlist(ptDevlist)
@@ -428,6 +435,113 @@ int List::iterator_next(lua_State *ptLuaState)
 	}
 
 	return 1;
+}
+
+
+
+TransferControl::TransferControl(struct ftdi_transfer_control *ptTransferControl)
+ : m_ptTransferControl(ptTransferControl)
+{
+}
+
+
+
+TransferControl::~TransferControl(void)
+{
+}
+
+
+
+int TransferControl::data_done(void)
+{
+	int iResult;
+
+
+	if( m_ptTransferControl==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_transfer_data_done(m_ptTransferControl);
+	}
+
+	return iResult;
+}
+
+
+
+void TransferControl::data_cancel(long seconds, long useconds)
+{
+	struct timeval tTime;
+
+
+	if( m_ptTransferControl!=NULL )
+	{
+		tTime.tv_sec = seconds;
+		tTime.tv_usec = useconds;
+
+		ftdi_transfer_data_cancel(m_ptTransferControl, &tTime);
+	}
+}
+
+
+void TransferControl::get_buffer(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT)
+{
+	char *pcBuffer;
+	size_t sizBuffer;
+
+
+	if( m_ptTransferControl==NULL )
+	{
+		pcBuffer = NULL;
+		sizBuffer = 0;
+	}
+	else
+	{
+		pcBuffer = (char*)(m_ptTransferControl->buf);
+		sizBuffer = m_ptTransferControl->size;
+	}
+
+	*ppcBUFFER_OUT = pcBuffer;
+	*psizBUFFER_OUT = sizBuffer;
+}
+
+
+
+int TransferControl::get_size(void)
+{
+	int iResult;
+
+
+	if( m_ptTransferControl==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = m_ptTransferControl->size;
+	}
+
+	return iResult;
+}
+
+
+int TransferControl::get_offset(void)
+{
+	int iResult;
+
+
+	if( m_ptTransferControl==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = m_ptTransferControl->offset;
+	}
+
+	return iResult;
 }
 
 
@@ -753,7 +867,7 @@ int Context::set_line_property(enum ftdi_bits_type bits, enum ftdi_stopbits_type
 	}
 	else
 	{
-		iResult = ftdi_set_line_property(m_ptContext, bits, sbit, parity, break_type);
+		iResult = ftdi_set_line_property2(m_ptContext, bits, sbit, parity, break_type);
 	}
 
 	return iResult;
@@ -967,7 +1081,7 @@ int Context::read_data(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT, size_t sizR
 			}
 			else
 			{
-				*ppcBUFFER_OUT = pucBuffer;
+				*ppcBUFFER_OUT = (char*)pucBuffer;
 				*psizBUFFER_OUT = iResult;
 			}
 		}
@@ -1008,6 +1122,7 @@ TransferControl *Context::read_data_submit(size_t sizRead)
 			{
 				ptTransferControl = new TransferControl(ptTc);
 			}
+		}
 	}
 
 	return ptTransferControl;
@@ -1037,6 +1152,7 @@ int Context::read_pins(unsigned char *pucARGUMENT_OUT)
 int Context::write_data(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
 {
 	int iResult;
+	const unsigned char *pucBuffer;
 
 
 	if( m_ptContext==NULL )
@@ -1045,7 +1161,8 @@ int Context::write_data(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
 	}
 	else
 	{
-		iResult = ftdi_write_data(m_ptContext, pcBUFFER_IN, sizBUFFER_IN);
+		pucBuffer = (const unsigned char*)pcBUFFER_IN;
+		iResult = ftdi_write_data(m_ptContext, pucBuffer, sizBUFFER_IN);
 	}
 
 	return iResult;
@@ -1055,6 +1172,7 @@ int Context::write_data(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
 
 TransferControl *Context::write_data_submit(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
 {
+	unsigned char *pucBuffer;
 	struct ftdi_transfer_control *ptTc;
 	TransferControl *ptTransferControl;
 
@@ -1065,7 +1183,8 @@ TransferControl *Context::write_data_submit(const char *pcBUFFER_IN, size_t sizB
 	}
 	else
 	{
-		ptTc = ftdi_write_data_submit(m_ptContext, pcBUFFER_IN, sizBUFFER_IN);
+		pucBuffer = (unsigned char*)pcBUFFER_IN;
+		ptTc = ftdi_write_data_submit(m_ptContext, pucBuffer, sizBUFFER_IN);
 		if( ptTc==NULL )
 		{
 			ptTransferControl = NULL;
@@ -1190,6 +1309,6 @@ const char *Context::get_error_string(void)
 		pcErrorString = ftdi_get_error_string(m_ptContext);
 	}
 
-	return iResult;
+	return pcErrorString;
 }
 

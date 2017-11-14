@@ -55,6 +55,8 @@ public:
 	void get_description(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT_LIST, unsigned int *uiNUMBER_OF_CREATED_OBJECTS);
 	void get_serial(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT_LIST, unsigned int *uiNUMBER_OF_CREATED_OBJECTS);
 
+	struct libusb_device *get_usb_device(void);
+
 private:
 	int get_strings(void);
 
@@ -108,6 +110,7 @@ private:
 typedef int RESULT_INT_TRUE_OR_NIL_WITH_ERR;
 typedef int RESULT_INT_NOTHING_OR_NIL_WITH_ERR;
 
+#if 0
 class Eeprom
 {
 public:
@@ -139,7 +142,7 @@ public:
 private:
 	struct ftdi_context *m_ptContext;
 };
-
+#endif
 
 
 class Context
@@ -181,7 +184,7 @@ public:
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_error_char(unsigned char errorch, unsigned char enable);
 
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR read_data(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT, size_t sizRead);
-	TransferControl *read_data_submit(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT, size_t sizRead);
+	TransferControl *read_data_submit(size_t sizRead);
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR read_pins(unsigned char *pucARGUMENT_OUT);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR write_data(const char *pcBUFFER_IN, size_t sizBUFFER_IN);
 	TransferControl *write_data_submit(const char *pcBUFFER_IN, size_t sizBUFFER_IN);

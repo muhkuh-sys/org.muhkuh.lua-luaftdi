@@ -17,10 +17,10 @@ CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/luaftdi.xml
 #
 
 IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
-	INCLUDE(${SWIG_USE_FILE})
-
 	# Add a custom target for the swig runtime for LUA.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_swig_lua_runtime.cmake)
+
+	INCLUDE(${SWIG_USE_FILE})
 
 	# Select the LUA version.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_lua.cmake)
@@ -28,13 +28,16 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(libusb_DIR "${CMAKE_BINARY_DIR}/../../external/libusb/install/cmake")
 	FIND_PACKAGE(libusb CONFIG REQUIRED)
 
+	INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 	INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
 	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../../external/libftdi/libftdi1-1.4/src/TARGET_libftdi1/src)
+	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/swig_runtime)
 
-	SET_SOURCE_FILES_PROPERTIES(ftdi1.i PROPERTIES CPLUSPLUS OFF)
-	SET_SOURCE_FILES_PROPERTIES(ftdi1.i PROPERTIES SWIG_FLAGS "")
-	SWIG_ADD_MODULE(TARGET_luaftdi lua ftdi1.i)
+	SET_SOURCE_FILES_PROPERTIES(luaftdi.i PROPERTIES CPLUSPLUS ON)
+	SET_SOURCE_FILES_PROPERTIES(luaftdi.i PROPERTIES SWIG_FLAGS "")
+	SWIG_ADD_MODULE(TARGET_luaftdi lua luaftdi.i wrapper.cpp)
 	SWIG_LINK_LIBRARIES(TARGET_luaftdi ${LUA_LIBRARIES} ${CMAKE_BINARY_DIR}/../../external/libftdi/install/usr/local/lib/libftdi1.a libusb::TARGET_libusb)
+	ADD_DEPENDENCIES(TARGET_luaftdi TARGET_swigluarun)
 
 	# Set the name of the output file to "luaftdi".
 	SET_TARGET_PROPERTIES(TARGET_luaftdi PROPERTIES PREFIX "" OUTPUT_NAME "luaftdi")

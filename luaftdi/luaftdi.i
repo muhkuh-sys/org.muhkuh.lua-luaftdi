@@ -167,6 +167,9 @@
 /* The "usb_find_all" method of the "Context" object returns a new "List" object. It must be freed by the LUA interpreter. */
 %newobject Context::usb_find_all;
 
+/* The "eeprom" method of the "Context" object returns a new "Eeprom" object. It must be freed by the LUA interpreter. */
+%newobject Context::eeprom;
+
 /* The "next" method of the "List" object returns a new "ListEntry" object. It must be freed by the LUA interpreter. */
 %newobject List::next;
 
@@ -175,5 +178,9 @@
 
 /* Do not wrap the "get_usb_device" method. It is used only internally to communicate between the ListEntry and the Context class. */
 %ignore ListEntry::get_usb_device;
+
+
+%rename("%(regex:/__ENUM_(.*)/\\1/)s", %$isenumitem) "";
+
 
 %include "wrapper.h"

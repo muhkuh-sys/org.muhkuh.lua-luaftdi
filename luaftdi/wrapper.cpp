@@ -1,6 +1,9 @@
 #include "wrapper.h"
 #include "libusb.h"
 
+/* The internal header is needed for the maximum Eeprom size. */
+#include "ftdi_i.h"
+
 FTDI_VERSION_INFO_T get_library_version(void)
 {
 	return ftdi_get_library_version();
@@ -542,6 +545,459 @@ int TransferControl::get_offset(void)
 	}
 
 	return iResult;
+}
+
+
+
+Eeprom::Eeprom(struct ftdi_context *ptContext)
+ : m_ptContext(ptContext)
+{
+}
+
+
+
+int Eeprom::initdefaults(char *manufacturer, char *product, char *serial)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_eeprom_initdefaults(m_ptContext, manufacturer, product, serial);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::set_strings(char *manufacturer, char *product, char *serial)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_eeprom_set_strings(m_ptContext, manufacturer, product, serial);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::get_manufacturer(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT)
+{
+	int iResult;
+	char *pcManufacturer;
+	size_t sizManufacturer;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		sizManufacturer = FTDI_MAX_EEPROM_SIZE;
+		pcManufacturer = (char*)malloc(sizManufacturer);
+		if( pcManufacturer==NULL )
+		{
+			sizManufacturer = 0;
+		}
+		else
+		{
+			iResult = ftdi_eeprom_get_strings(m_ptContext, pcManufacturer, sizManufacturer, NULL, 0, NULL, 0);
+			if( iResult!=0 )
+			{
+				free(pcManufacturer);
+				pcManufacturer = NULL;
+				sizManufacturer = 0;
+			}
+		}
+	}
+
+	*ppcBUFFER_OUT = pcManufacturer;
+	*psizBUFFER_OUT = sizManufacturer;
+
+	return iResult;
+}
+
+
+
+int Eeprom::get_product(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT)
+{
+	int iResult;
+	char *pcProduct;
+	size_t sizProduct;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		sizProduct = FTDI_MAX_EEPROM_SIZE;
+		pcProduct = (char*)malloc(sizProduct);
+		if( pcProduct==NULL )
+		{
+			sizProduct = 0;
+		}
+		else
+		{
+			iResult = ftdi_eeprom_get_strings(m_ptContext, NULL, 0, pcProduct, sizProduct, NULL, 0);
+			if( iResult!=0 )
+			{
+				free(pcProduct);
+				pcProduct = NULL;
+				sizProduct = 0;
+			}
+		}
+	}
+
+	*ppcBUFFER_OUT = pcProduct;
+	*psizBUFFER_OUT = sizProduct;
+
+	return iResult;
+}
+
+
+
+int Eeprom::get_serial(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT)
+{
+	int iResult;
+	char *pcSerial;
+	size_t sizSerial;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		sizSerial = FTDI_MAX_EEPROM_SIZE;
+		pcSerial = (char*)malloc(sizSerial);
+		if( pcSerial==NULL )
+		{
+			sizSerial = 0;
+		}
+		else
+		{
+			iResult = ftdi_eeprom_get_strings(m_ptContext, NULL, 0, NULL, 0, pcSerial, sizSerial);
+			if( iResult!=0 )
+			{
+				free(pcSerial);
+				pcSerial = NULL;
+				sizSerial = 0;
+			}
+		}
+	}
+
+	*ppcBUFFER_OUT = pcSerial;
+	*psizBUFFER_OUT = sizSerial;
+
+	return iResult;
+}
+
+
+
+int Eeprom::build(void)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_eeprom_build(m_ptContext);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::decode(int verbose)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_eeprom_decode(m_ptContext, verbose);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::get_value(enum ftdi_eeprom_value value_name, int *piARGUMENT_OUT)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_get_eeprom_value(m_ptContext, value_name, piARGUMENT_OUT);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::set_value(enum ftdi_eeprom_value value_name, int value)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_set_eeprom_value(m_ptContext, value_name, value);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::get_buf(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT)
+{
+	int iResult;
+	unsigned char *pucBuffer;
+	size_t sizBuffer;
+
+
+	pucBuffer = NULL;
+	sizBuffer = 0;
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		sizBuffer = FTDI_MAX_EEPROM_SIZE;
+		pucBuffer = (unsigned char*)malloc(sizBuffer);
+		if( pucBuffer==NULL )
+		{
+			sizBuffer = 0;
+		}
+		else
+		{
+			iResult = ftdi_get_eeprom_buf(m_ptContext, pucBuffer, sizBuffer);
+			if( iResult!=0 )
+			{
+				free(pucBuffer);
+				pucBuffer = NULL;
+				sizBuffer = 0;
+			}
+		}
+	}
+
+	*ppcBUFFER_OUT = (char*)pucBuffer;
+	*psizBUFFER_OUT = sizBuffer;
+
+	return iResult;
+}
+
+
+
+int Eeprom::set_buf(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
+{
+	int iResult;
+	const unsigned char *pucBuffer;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		pucBuffer = (const unsigned char*)pcBUFFER_IN;
+		iResult = ftdi_set_eeprom_buf(m_ptContext, pucBuffer, sizBUFFER_IN);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::set_user_data(const char *pcBUFFER_IN, size_t sizBUFFER_IN)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_set_eeprom_user_data(m_ptContext, pcBUFFER_IN, sizBUFFER_IN);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::read_location(int eeprom_addr, unsigned short *pusARGUMENT_OUT)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_read_eeprom_location(m_ptContext, eeprom_addr, pusARGUMENT_OUT);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::write_location(int eeprom_addr, unsigned short eeprom_val)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_write_eeprom_location(m_ptContext, eeprom_addr, eeprom_val);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::read(void)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_read_eeprom(m_ptContext);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::write(void)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_write_eeprom(m_ptContext);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::erase(void)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_erase_eeprom(m_ptContext);
+	}
+
+	return iResult;
+}
+
+
+
+int Eeprom::read_chipid(unsigned int *puiARGUMENT_OUT)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_read_chipid(m_ptContext, puiARGUMENT_OUT);
+	}
+
+	return iResult;
+}
+
+
+
+const char *Eeprom::get_error_string(void)
+{
+	const char *pcErrorString;
+
+
+	if( m_ptContext==NULL )
+	{
+		pcErrorString = "No context available.";
+	}
+	else
+	{
+		pcErrorString = ftdi_get_error_string(m_ptContext);
+	}
+
+	return pcErrorString;
 }
 
 
@@ -1291,6 +1747,25 @@ int Context::write_data_get_chunksize(unsigned int *puiARGUMENT_OUT)
 	}
 
 	return iResult;
+}
+
+
+
+Eeprom *Context::eeprom(void)
+{
+	Eeprom *ptEeprom;
+
+
+	if( m_ptContext==NULL )
+	{
+		ptEeprom = NULL;
+	}
+	else
+	{
+		ptEeprom = new Eeprom(m_ptContext);
+	}
+
+	return ptEeprom;
 }
 
 

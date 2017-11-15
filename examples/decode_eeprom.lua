@@ -1,7 +1,7 @@
 local ftdi = require 'luaftdi'
 
-local ulUSBVendor, ulUSBProduct = 0x1939, 0x002c
--- local ulUSBVendor, ulUSBProduct = 0x0403, 0x6010
+-- local ulUSBVendor, ulUSBProduct = 0x1939, 0x002c
+local ulUSBVendor, ulUSBProduct = 0x0403, 0xcff8
 -- local ulUSBVendor, ulUSBProduct = 0x0640, 0x0028
 
 
@@ -9,23 +9,24 @@ local tVersionInfo = ftdi.get_library_version()
 print(string.format("[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s", tVersionInfo.major, tVersionInfo.minor, tVersionInfo.micro, tVersionInfo.version_str, tVersionInfo.snapshot_str))
 
 -- Create a new FTDI context.
-local tContext = ftdi.new()
+local tContext = ftdi.Context()
 
 -- Open the device.
-local iResult = ftdi.usb_open(tContext, ulUSBVendor, ulUSBProduct)
-if iResult~=0 then
-  error('Failed to open the device!')
-end
+local tResult, strError = tContext:usb_open(ulUSBVendor, ulUSBProduct)
+assert(tResult, strError)
+
+-- Get the Eeprom object.
+local tEeprom = tContext:eeprom()
+assert(tEeprom, 'Failed to get the Eeprom object.')
 
 -- Read the EEPROM.
-iResult = ftdi.read_eeprom(tContext)
-if iResult~=0 then
-  error('Failed to read the eeprom!')
-end
-iResult = ftdi.eeprom_decode(tContext, 1)
-if iResult~=0 then
-  error('Failed to decode the eeprom!')
-end
+tResult, strError = tEeprom:read()
+assert(tResult, strError)
+print()
+print('Decoding EEPROM:')
+tResult, strError = tEeprom:decode(1)
+print()
+assert(tResult, strError)
 
 
 local atValues = {
@@ -107,14 +108,9 @@ local atValues = {
 
 -- Get the EEPROM attributes.
 for _, tAttr in pairs(atValues) do
-  local iValue
-  iResult, iValue = ftdi.get_eeprom_value(tContext, tAttr.id)
-  if iResult~=0 then
-    print('failed to read', k)
-    error('No EEPROM found.')
-  end
+  tResult, strError = tEeprom:get_value(tAttr.id)
+  assert(tResult, strError)
+  local iValue = tResult
   print(string.format("  [ftdi.%s] = %d, -- 0x%08x", tAttr.name, iValue, iValue))
 end
 
-
-ftdi.free(tContext)

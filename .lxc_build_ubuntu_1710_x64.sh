@@ -18,7 +18,31 @@ mkdir -p ${PRJDIR}/platform/targets
 lxc init mbs-ubuntu-1710-x64 ${CONTAINER}
 lxc config device add ${CONTAINER} projectDir disk source=${PRJDIR} path=/tmp/work
 lxc start ${CONTAINER}
-sleep 5
+
+# Wait 4 seconds for the system to come up.
+sleep 4
+
+# Wait until the network is up and running.
+WAIT_CNT=0
+WAIT_MAX=30
+echo "Waiting for the network to come up (maximum ${WAIT_MAX} seconds)"
+while [ ${WAIT_CNT} -lt ${WAIT_MAX} ]; do
+	NETWORK_STATUS=`lxc exec ${CONTAINER} -- systemctl show --property=ActiveState systemd-resolved-update-resolvconf.path`
+	if [ "${NETWORK_STATUS}" = "ActiveState=active" ]; then
+		echo "OK, the network is up."
+		break
+	else
+		sleep 1
+		let WAIT_CNT=WAIT_CNT+1
+		echo "${WAIT_CNT}"
+	fi
+done
+if [ ${WAIT_CNT} -ge ${WAIT_MAX} ]; then
+	echo "The network did not come up!"
+	lxc stop ${CONTAINER}
+	lxc delete ${CONTAINER}
+	exit -1
+fi
 
 # Prepare the build folder.
 lxc exec ${CONTAINER} -- bash -c 'rm -rf /tmp/build'

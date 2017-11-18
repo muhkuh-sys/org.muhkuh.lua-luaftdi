@@ -13,7 +13,7 @@ PRJDIR=`pwd`
 mkdir -p ${PRJDIR}/build
 
 # Start the container and mount the project folder.
-lxc init mbs-ubuntu-1604-x64 ${CONTAINER} -c security.privileged=true
+lxc init mbs-ubuntu-1604-x64 ${CONTAINER}
 lxc config device add ${CONTAINER} projectDir disk source=${PRJDIR} path=/tmp/work
 lxc start ${CONTAINER}
 sleep 5

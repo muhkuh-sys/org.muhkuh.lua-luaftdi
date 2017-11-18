@@ -1559,6 +1559,9 @@ int Context::read_data(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT, size_t sizR
 			{
 				*ppcBUFFER_OUT = (char*)pucBuffer;
 				*psizBUFFER_OUT = iResult;
+
+				/* Return 0 or the wrapper thinks this is an error. */
+				iResult = 0;
 			}
 		}
 	}

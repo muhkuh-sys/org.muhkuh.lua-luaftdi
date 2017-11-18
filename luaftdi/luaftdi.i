@@ -170,8 +170,8 @@
 /* The "eeprom" method of the "Context" object returns a new "Eeprom" object. It must be freed by the LUA interpreter. */
 %newobject Context::eeprom;
 
-/* The "next" method of the "List" object returns a new "ListEntry" object. It must be freed by the LUA interpreter. */
-%newobject List::next;
+/* Do not wrap the "next" method of the "List" object. */
+%ignore List::next;
 
 /* Do not wrap the "iterator_next" method. It makes only sense in the closure function and shoud not be called directly. */
 %ignore List::iterator_next;

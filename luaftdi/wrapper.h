@@ -395,7 +395,7 @@ public:
 	List(struct ftdi_context *ptContext, struct ftdi_device_list *ptDevlist);
 	~List(void);
 
-	ListEntry *next(void);
+	ListEntry *next(struct ftdi_device_list *m_ptCurrentDevice);
 	void iter(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, swig_type_info *p_ListEntry);
 
 	static int iterator_next(lua_State *ptLuaState);
@@ -403,7 +403,6 @@ public:
 private:
 	struct ftdi_context *m_ptContext;
 	struct ftdi_device_list *m_ptDevlist;
-	struct ftdi_device_list *m_ptCurrentDevice;
 };
 
 

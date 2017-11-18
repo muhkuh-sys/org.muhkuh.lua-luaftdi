@@ -352,7 +352,6 @@ struct libusb_device *ListEntry::get_usb_device(void)
 List::List(struct ftdi_context *ptContext, struct ftdi_device_list *ptDevlist)
  : m_ptContext(ptContext)
  , m_ptDevlist(ptDevlist)
- , m_ptCurrentDevice(ptDevlist)
 {
 }
 
@@ -370,17 +369,16 @@ List::~List(void)
 
 
 
-ListEntry *List::next(void)
+ListEntry *List::next(struct ftdi_device_list *ptCurrentDevice)
 {
 	ListEntry *ptNext;
 
 
 	ptNext = NULL;
 
-	if( m_ptCurrentDevice!=NULL )
+	if( ptCurrentDevice!=NULL )
 	{
-		ptNext = new ListEntry(m_ptContext, m_ptCurrentDevice);
-		m_ptCurrentDevice = m_ptCurrentDevice->next;
+		ptNext = new ListEntry(m_ptContext, ptCurrentDevice);
 	}
 
 	return ptNext;
@@ -394,8 +392,10 @@ void List::iter(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, swig_type_info *p_L
 	lua_pushlightuserdata(MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, (void*)this);
 	/* Push the type of the result as the second up-value. */
 	lua_pushlightuserdata(MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, (void*)p_ListEntry);
-	/* Create a C closure with 2 arguments. */
-	lua_pushcclosure(MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, &(List::iterator_next), 2);
+	/* Push the pointer to the first entry of the device list as the third up-value. */
+	lua_pushlightuserdata(MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, (void*)m_ptDevlist);
+	/* Create a C closure with 3 arguments. */
+	lua_pushcclosure(MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT, &(List::iterator_next), 3);
 
 	/* NOTE: This function does not return the produced number of
 	 *       arguments. This is done in the SWIG wrapper.
@@ -411,6 +411,7 @@ int List::iterator_next(lua_State *ptLuaState)
 	List *ptThis;
 	swig_type_info *ptTypeInfo;
 	ListEntry *ptListEntry;
+	struct ftdi_device_list *ptCurrentDevice;
 
 
 	/* Get the first up-value. */
@@ -424,8 +425,27 @@ int List::iterator_next(lua_State *ptLuaState)
 	pvUpvalue = lua_touserdata(ptLuaState, iUpvalueIndex);
 	ptTypeInfo = (swig_type_info*)pvUpvalue;
 
-	/* Get the next list entry. */
-	ptListEntry = ptThis->next();
+	/* Get the third up-value. */
+	iUpvalueIndex = lua_upvalueindex(3);
+	pvUpvalue = lua_touserdata(ptLuaState, iUpvalueIndex);
+	/* Cast the up-value to the current device. */
+	ptCurrentDevice = (struct ftdi_device_list*)pvUpvalue;
+
+	if( ptCurrentDevice==NULL )
+	{
+		ptListEntry = NULL;
+	}
+	else
+	{
+		/* Create a new list entry object. */
+		ptListEntry = ptThis->next(ptCurrentDevice);
+		/* Move to the next entry. */
+		ptCurrentDevice = ptCurrentDevice->next;
+		/* Replace the item on the stack. */
+		lua_pushlightuserdata(ptLuaState, (void*)ptCurrentDevice);
+		lua_replace(ptLuaState, iUpvalueIndex);
+	}
+
 	/* Push the class on the LUA stack. */
 	if( ptListEntry==NULL )
 	{

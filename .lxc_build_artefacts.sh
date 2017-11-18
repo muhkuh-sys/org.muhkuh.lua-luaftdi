@@ -57,9 +57,7 @@ FILELIST=`lxc exec ${CONTAINER} -- bash -c 'find "/tmp/work" -path "/tmp/work/bu
 echo ${FILELIST}
 for strAbsolutePath in ${FILELIST}; do
 	echo "Pull ${strAbsolutePath}"
-	RELP=`lxc exec ${CONTAINER} -- bash -c "realpath --relative-to=/tmp/work ${strAbsolutePath}"`
-	RELD=`dirname ${RELP}`
-	lxc file pull ${CONTAINER}${strAbsolutePath} ${RELD}/
+	lxc file pull ${CONTAINER}${strAbsolutePath} build/
 done
 
 # Stop and remove the container.

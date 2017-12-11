@@ -164,6 +164,24 @@
 %}
 
 
+
+%typemap(out) RESULT_INT_INT_OR_NIL_WITH_ERR
+%{
+	if( $1>=0 )
+	{
+		lua_pushnumber(L, $1);
+		SWIG_arg = 1;
+	}
+	else
+	{
+		lua_pushnil(L);
+		lua_pushstring(L, arg1->get_error_string());
+		SWIG_arg = 2;
+	}
+%}
+
+
+
 /* The "usb_find_all" method of the "Context" object returns a new "List" object. It must be freed by the LUA interpreter. */
 %newobject Context::usb_find_all;
 

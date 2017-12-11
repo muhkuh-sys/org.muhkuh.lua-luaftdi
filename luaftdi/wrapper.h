@@ -428,6 +428,7 @@ private:
 
 typedef int RESULT_INT_TRUE_OR_NIL_WITH_ERR;
 typedef int RESULT_INT_NOTHING_OR_NIL_WITH_ERR;
+typedef int RESULT_INT_INT_OR_NIL_WITH_ERR;
 
 
 class Eeprom
@@ -441,7 +442,7 @@ public:
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR get_product(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT);
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR get_serial(char **ppcBUFFER_OUT, size_t *psizBUFFER_OUT);
 
-	RESULT_INT_TRUE_OR_NIL_WITH_ERR build(void);
+	RESULT_INT_INT_OR_NIL_WITH_ERR build(void);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR decode(int verbose);
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR get_value(enum ftdi_eeprom_value value_name, int *piARGUMENT_OUT);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_value(enum ftdi_eeprom_value value_name, int value);

@@ -132,7 +132,7 @@
 
 %typemap(out) RESULT_INT_TRUE_OR_NIL_WITH_ERR
 %{
-	if( $1==0 )
+	if( $1>=0 )
 	{
 		lua_pushboolean(L, 1);
 		SWIG_arg = 1;
@@ -149,7 +149,7 @@
 
 %typemap(out) RESULT_INT_NOTHING_OR_NIL_WITH_ERR
 %{
-	if( $1!=0 )
+	if( $1<0 )
 	{
 		lua_pushnil(L);
 		lua_pushstring(L, arg1->get_error_string());

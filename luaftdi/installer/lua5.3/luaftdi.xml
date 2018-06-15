@@ -5,7 +5,8 @@
 	      artifact="lua5.3-luaftdi"
 	      version="@PROJECT_VERSION@"
 	      vcs-id="@PROJECT_VERSION_VCS@"
-	      extension="tar.xz">
+	      extension="tar.xz"
+	      platform="@JONCHKI_PLATFORM@">
 		<license name="GPL-v2"/>
 		<author name="The Muhkuh team." url="https://www.github.com/muhkuh-sys" />
 		<description>

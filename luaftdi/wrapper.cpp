@@ -1774,6 +1774,25 @@ int Context::write_data_get_chunksize(unsigned int *puiARGUMENT_OUT)
 
 
 
+int Context::usb_reset_device(void)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = libusb_reset_device(m_ptContext->usb_dev);
+	}
+
+	return iResult;
+}
+
+
+
 Eeprom *Context::eeprom(void)
 {
 	Eeprom *ptEeprom;

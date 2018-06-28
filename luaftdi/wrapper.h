@@ -517,6 +517,8 @@ public:
 
 	Eeprom *eeprom(void);
 
+	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_reset_device(void);
+
 	const char *get_error_string(void);
 
 

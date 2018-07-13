@@ -1,42 +1,40 @@
 local ftdi = require 'luaftdi'
 
+local ulUSBVendor, ulUSBProduct = 0x1939, 0x0023
 -- local ulUSBVendor, ulUSBProduct = 0x1939, 0x002c
 -- local ulUSBVendor, ulUSBProduct = 0x0403, 0x6010
-local ulUSBVendor, ulUSBProduct = 0x0640, 0x0028
+-- local ulUSBVendor, ulUSBProduct = 0x0640, 0x0028
 
 
 local tVersionInfo = ftdi.get_library_version()
 print(string.format("[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s", tVersionInfo.major, tVersionInfo.minor, tVersionInfo.micro, tVersionInfo.version_str, tVersionInfo.snapshot_str))
 
 -- Create a new FTDI context.
-local tContext = ftdi.new()
+local tContext = ftdi.Context()
 
 -- Open the device.
-local iResult = ftdi.usb_open(tContext, ulUSBVendor, ulUSBProduct)
-if iResult~=0 then
-  error('Failed to open the device!')
-end
+local tResult, strError = tContext:usb_open(ulUSBVendor, ulUSBProduct)
+assert(tResult, strError)
+
+-- Get the Eeprom object.
+local tEeprom = tContext:eeprom()
+assert(tEeprom, 'Failed to get the Eeprom object.')
 
 -- Read the EEPROM.
-iResult = ftdi.read_eeprom(tContext)
-if iResult~=0 then
-  error('Failed to read the eeprom!')
-end
+tResult, strError = tEeprom:read()
+assert(tResult, strError)
 
 -- Get the EEPROM size.
-local iEepromSize
-iResult, iEepromSize = ftdi.get_eeprom_value(tContext, ftdi.CHIP_SIZE)
-if iResult~=0 then
-  error('No EEPROM found.')
-end
+tResult, strError = tEeprom:get_value(ftdi.CHIP_SIZE)
+assert(tResult, strError)
+local iEepromSize = tResult
 if iEepromSize==-1 then
-  print(iResult, iEepromSize)
-  error('The EEPROM is already empty.')
+  print('The EEPROM is already empty.')
 end
 
-iResult = ftdi.erase_eeprom(tContext)
-if iResult~=0 then
-  error('Failed to erase the EEPROM.')
-end
+tResult, strError = tEeprom:erase()
+assert(tResult, strError)
 
-ftdi.free(tContext)
+print(tContext:usb_reset_device())
+
+tContext:usb_close()

@@ -114,3 +114,4 @@ for _, tAttr in pairs(atValues) do
   print(string.format("  [ftdi.%s] = %d, -- 0x%08x", tAttr.name, iValue, iValue))
 end
 
+tContext:usb_close()

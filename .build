@@ -1,7 +1,28 @@
 #! /bin/bash
 set -e
 
-TARGET=$1
+# Check the number of parameters.
+if [ $# -ne 3 ]
+then
+	echo "The script needs 3 parameter:"
+	echo "  1) the distribution ID"
+	echo "  2) the distribution version (can be an empty string '')"
+	echo "  3) the CPU architecture"
+	exit -1
+fi
+
+JONCHKI_DISTRIBUTION_ID=$1
+JONCHKI_DISTRIBUTION_VERSION=$2
+JONCHKI_CPU_ARCHITECTURE=$3
+
+if [ "${JONCHKI_DISTRIBUTION_VERSION}" == "" ]
+then
+	JONCHKI_PLATFORM_ID="${JONCHKI_DISTRIBUTION_ID}_${JONCHKI_CPU_ARCHITECTURE}"
+else
+	JONCHKI_PLATFORM_ID="${JONCHKI_DISTRIBUTION_ID}_${JONCHKI_DISTRIBUTION_VERSION}_${JONCHKI_CPU_ARCHITECTURE}"
+fi
+echo "Building jonchki for ${JONCHKI_PLATFORM_ID}"
+
 
 JONCHKI_VERSION=0.0.3.1
 JONCHKI_VERBOSE=info
@@ -15,7 +36,7 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 PRJ_DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
-if [ "$TARGET" == "linux" ]; then
+if [ "${JONCHKI_DISTRIBUTION_ID}" == "ubuntu" ]; then
 	# Check for all build dependencies.
 	declare -a -r astrDeb=(
 		"libudev-dev"
@@ -38,24 +59,24 @@ if [ "$TARGET" == "linux" ]; then
 	JONCHKI_SYSTEM=""
 	TOOLS_PATH=${PATH}
 
-elif [ "$TARGET" == "windows32" ]; then
+elif [ "${JONCHKI_PLATFORM_ID}" == "windows_x86" ]; then
 	CMAKE_COMPILER="-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=i686-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=i686-w64-mingw32-g++ -DCMAKE_RC_COMPILER=i686-w64-mingw32-windres"
 	CMAKE_PLATFORM="-DJONCHKI_PLATFORM_DIST_ID=windows -DJONCHKI_PLATFORM_DIST_VERSION="" -DJONCHKI_PLATFORM_CPU_ARCH=x86"
 	JONCHKI_SYSTEM="--distribution-id windows --empty-distribution-version --cpu-architecture x86"
 	TOOLS_PATH=/usr/mingw-w64-i686/bin:${PATH}
 
-elif [ "$TARGET" == "windows64" ]; then
+elif [ "${JONCHKI_PLATFORM_ID}" == "windows_x86_64" ]; then
 	CMAKE_COMPILER="-DCMAKE_C_FLAGS=-m64 -DCMAKE_CXX_FLAGS=-m64 -DCMAKE_SYSTEM_NAME=Windows -DCMAKE_C_COMPILER=x86_64-w64-mingw32-gcc -DCMAKE_CXX_COMPILER=x86_64-w64-mingw32-g++ -DCMAKE_RC_COMPILER=x86_64-w64-mingw32-windres"
 	CMAKE_PLATFORM="-DJONCHKI_PLATFORM_DIST_ID=windows -DJONCHKI_PLATFORM_DIST_VERSION="" -DJONCHKI_PLATFORM_CPU_ARCH=x86_64"
 	JONCHKI_SYSTEM="--distribution-id windows --empty-distribution-version --cpu-architecture x86_64"
 	TOOLS_PATH=/usr/mingw-w64-x86_64/bin:${PATH}
 
 else
-	echo "Unknown build target: ${TARGET}"
+	echo "Unknown build target: ${JONCHKI_PLATFORM_ID}"
 	exit -1
 fi
 
-BUILD_DIR=${PRJ_DIR}/build/${TARGET}
+BUILD_DIR=${PRJ_DIR}/build/${JONCHKI_PLATFORM_ID}
 mkdir -p ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}/external
 mkdir -p ${BUILD_DIR}/lua5.1/build_requirements

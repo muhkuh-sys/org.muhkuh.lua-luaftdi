@@ -1,7 +1,8 @@
+require 'muhkuh_cli_init'
 local ftdi = require 'luaftdi'
 
--- local ulUSBVendor, ulUSBProduct = 0x1939, 0x002c
-local ulUSBVendor, ulUSBProduct = 0x0403, 0xcff8
+local ulUSBVendor, ulUSBProduct = 0x1939, 0x0023
+-- local ulUSBVendor, ulUSBProduct = 0x0403, 0xcff8
 -- local ulUSBVendor, ulUSBProduct = 0x0640, 0x0028
 
 

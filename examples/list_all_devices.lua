@@ -1,6 +1,7 @@
-luaftdi = require 'luaftdi'
+require 'muhkuh_cli_init'
+local luaftdi = require 'luaftdi'
 
-local ulUSBVendor, ulUSBProduct = 0x0403, 0xCFF8
+local ulUSBVendor, ulUSBProduct = 0x1939, 0x0023
 
 
 local function print_list_entry(tListEntry)

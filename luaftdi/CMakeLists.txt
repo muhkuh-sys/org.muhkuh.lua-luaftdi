@@ -13,7 +13,7 @@ CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/luaftdi.xml
 
 # Filter the jonchki configuration for the examples.
 CONFIGURE_FILE(${CMAKE_HOME_DIRECTORY}/examples/jonchki/luaftdi-examples.xml
-               ${CMAKE_BINARY_DIR}/../../../examples/luaftdi-examples.xml
+               ${CMAKE_BINARY_DIR}/../../examples/luaftdi-examples.xml
                @ONLY)
 
 #----------------------------------------------------------------------------

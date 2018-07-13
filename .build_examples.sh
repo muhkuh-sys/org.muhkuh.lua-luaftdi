@@ -60,7 +60,14 @@ mkdir -p ${WORK}
 # The common options are the same for all targets.
 COMMON_OPTIONS="--syscfg ${PRJ_DIR}/examples/jonchki/jonchkisys.cfg --prjcfg ${PRJ_DIR}/examples/jonchki/jonchkicfg.xml --finalizer ${PRJ_DIR}/examples/jonchki/finalizer.lua ${WORK_BASE}/luaftdi-examples.xml"
 
+if [ "${JONCHKI_DISTRIBUTION_VERSION}" == "" ]
+then
+	DISTRIB="--empty-distribution-version"
+else
+	DISTRIB="--distribution-version ${JONCHKI_DISTRIBUTION_VERSION}"
+fi
+
 # Build the artifact.
 pushd ${WORK}
-${JONCHKI} install-dependencies -v ${JONCHKI_VERBOSE} --distribution-id "${JONCHKI_DISTRIBUTION_ID}" --distribution-version "${JONCHKI_DISTRIBUTION_VERSION}" --cpu-architecture "${JONCHKI_CPU_ARCHITECTURE}" ${COMMON_OPTIONS}
+${JONCHKI} install-dependencies -v ${JONCHKI_VERBOSE} --distribution-id ${JONCHKI_DISTRIBUTION_ID} ${DISTRIB} --cpu-architecture ${JONCHKI_CPU_ARCHITECTURE} ${COMMON_OPTIONS}
 popd

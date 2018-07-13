@@ -1,6 +1,7 @@
 local t = ...
 local strDistId, strDistVersion, strCpuArch = t:get_platform()
-local cLogger = t.cLogger
+local cLog = t.cLog
+local tLog = t.tLog
 local tResult
 local archives = require 'installer.archives'
 local pl = require'pl.import_into'()
@@ -36,14 +37,14 @@ HOST_CPU_ARCHITECTURE=${platform_cpu_architecture}
 local strPackageDir = t:replace_template('${install_base}/.jonchki')
 local tError, strError = pl.dir.makepath(strPackageDir)
 if tError~=true then
-  cLogger:error('Failed to create the folder "%s": %s', strPackageDir, strError)
+  tLog.error('Failed to create the folder "%s": %s', strPackageDir, strError)
 else
   local strPackagePath = pl.path.join(strPackageDir, 'package.txt')
   local tFileError, strError = pl.utils.writefile(strPackagePath, strPackageText, false)
   if tFileError==nil then
-    cLogger:error('Failed to write the package file "%s": %s', strPackagePath, strError)
+    tLog.error('Failed to write the package file "%s": %s', strPackagePath, strError)
   else
-    local Archive = archives(cLogger)
+    local Archive = archives(cLog)
 
     -- Create a ZIP archive for Windows platforms. Build a "tar.gz" for Linux.
     local strArchiveExtension

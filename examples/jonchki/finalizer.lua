@@ -61,7 +61,7 @@ else
     end
 
     local strArtifactVersion = t:replace_template('${root_artifact_artifact}-${root_artifact_version}')
-    local strArchive = t:replace_template(string.format('${install_base}/../../../%s-%s%s_${platform_cpu_architecture}.%s', strArtifactVersion, strDistId, strDistVersion, strArchiveExtension))
+    local strArchive = t:replace_template(string.format('${install_base}/../../../../repository/org/muhkuh/lua/luaftdi/${root_artifact_version}/%s-%s%s_${platform_cpu_architecture}.%s', strArtifactVersion, strDistId, strDistVersion, strArchiveExtension))
     local strDiskPath = t:replace_template('${install_base}')
     local strArchiveMemberPrefix = strArtifactVersion
 

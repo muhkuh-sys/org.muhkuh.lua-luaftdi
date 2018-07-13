@@ -19,12 +19,13 @@ for strSrc, strDst in pairs(atScripts) do
 end
 
 -- Install the wrapper.
---if strDistId=='windows' then
---  t:install('../wrapper/windows/jonchki.bat', '${install_base}/')
---elseif strDistId=='ubuntu' then
---  -- This is a shell script setting the library search path for the LUA shared object.
---  t:install('../wrapper/linux/jonchki', '${install_base}/')
---end
+if strDistId=='windows' then
+  t:install('../windows/muhkuh_cli_init.lua', '${install_base}/')
+elseif strDistId=='ubuntu' then
+  -- This is a shell script setting the library search path for the LUA shared object.
+  t:install('../linux/lua5.1.sh', '${install_base}/')
+  t:install('../linux/muhkuh_cli_init.lua', '${install_base}/')
+end
 
 -- Create the package file.
 local strPackageText = t:replace_template([[PACKAGE_NAME=${root_artifact_artifact}

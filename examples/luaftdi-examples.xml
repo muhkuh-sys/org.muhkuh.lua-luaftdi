@@ -3,10 +3,10 @@
 	<info group="org.muhkuh.lua"
 	      module="luaftdi"
 	      artifact="luaftdi-examples"
-	      version="@PROJECT_VERSION@"
-	      vcs-id="@PROJECT_VERSION_VCS@"
+	      version="1.0.1"
+	      vcs-id="GIT2a3909c1b85d+"
 	      extension="zip"/>
 	<dependencies>
-		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.1-luaftdi" version="@PROJECT_VERSION@"/>
+		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.1-luaftdi" version="1.0.1"/>
 	</dependencies>
 </jonchki-artifact>

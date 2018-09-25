@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.7)
 #
 PROJECT("libusb")
 
-SET(VERSION_EXTERNAL "1.0.21")
+SET(VERSION_EXTERNAL "1.0.22")
 
 INCLUDE(ExternalProject)
 
@@ -29,7 +29,7 @@ ExternalProject_Add(TARGET_libusb
                     PREFIX ${CMAKE_CURRENT_BINARY_DIR}/libusb-${VERSION_EXTERNAL}
                     EXCLUDE_FROM_ALL 1
                     URL ${CMAKE_CURRENT_SOURCE_DIR}/libusb-${VERSION_EXTERNAL}.tar.bz2
-                    URL_HASH SHA1=54d71841542eb1a6f0b0420878a4d5434efe8d28
+                    URL_HASH SHA1=10116aa265aac4273a0c894faa089370262ec0dc
                     PATCH_COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/templates ${CMAKE_CURRENT_BINARY_DIR}/libusb-${VERSION_EXTERNAL}/src/TARGET_libusb
                     CMAKE_ARGS ${LIBUSB_CMAKE_ARGS}
                     INSTALL_COMMAND ${CMAKE_MAKE_PROGRAM} install DESTDIR=${CMAKE_CURRENT_BINARY_DIR}

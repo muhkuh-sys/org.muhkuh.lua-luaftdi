@@ -40,10 +40,10 @@ SET(LT_OBJDIR ".libs/")
 SET(PACKAGE "libusb")
 SET(PACKAGE_BUGREPORT "libusb-devel@lists.sourceforge.net")
 SET(PACKAGE_NAME "libusb")
-SET(PACKAGE_STRING "libusb 1.0.20")
+SET(PACKAGE_STRING "libusb 1.0.22")
 SET(PACKAGE_TARNAME "libusb")
 SET(PACKAGE_URL "http://libusb.info")
-SET(PACKAGE_VERSION "1.0.20")
+SET(PACKAGE_VERSION "1.0.22")
 
 SET(VERSION "1.0.20")
 
@@ -100,6 +100,7 @@ ELSEIF(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
 	                   libusb/os/threads_windows.c
 	                   libusb/os/poll_windows.c
 	                   libusb/os/windows_nt_common.c
+	                   libusb/os/windows_usbdk.c
 	                   libusb/os/windows_winusb.c
 	)
 	

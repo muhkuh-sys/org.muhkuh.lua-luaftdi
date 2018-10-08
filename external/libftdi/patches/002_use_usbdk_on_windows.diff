@@ -1,40 +1,33 @@
-diff -uNr libftdi1-1.4/src/ftdi.c libftdi1-1.4_patch/src/ftdi.c
+diff -uNr libftdi1-1.4/src/ftdi.c libftdi1-1.4_patched/src/ftdi.c
 --- libftdi1-1.4/src/ftdi.c	2017-08-07 16:52:39.000000000 +0200
-+++ libftdi1-1.4_patch/src/ftdi.c	2018-09-25 10:57:40.744192680 +0200
-@@ -108,6 +108,32 @@
++++ libftdi1-1.4_patched/src/ftdi.c	2018-10-08 15:43:10.562427303 +0200
+@@ -87,6 +87,9 @@
+ */
+ int ftdi_init(struct ftdi_context *ftdi)
+ {
++#ifdef _WIN32
++    int ret;
++#endif
+     struct ftdi_eeprom* eeprom = (struct ftdi_eeprom *)malloc(sizeof(struct ftdi_eeprom));
+     ftdi->usb_ctx = NULL;
+     ftdi->usb_dev = NULL;
+@@ -108,6 +111,15 @@
      if (libusb_init(&ftdi->usb_ctx) < 0)
          ftdi_error_return(-3, "libusb_init() failed");
  
 +#ifdef _WIN32
 +    /* Enable USBDK on windows. */
-+    int ret = LIBUSB_SUCCESS;
-+    ret =libusb_set_option(ftdi->usb_ctx, LIBUSB_OPTION_USE_USBDK);
-+    if(ret!=LIBUSB_SUCCESS ){
-+        printf("libusb_set_option(LIBUSB_OPTION_USE_USBDK) failed:\n");
-+
-+        switch(ret){
-+            case LIBUSB_ERROR_INVALID_PARAM : printf("INFO: LIBUSB_ERROR_INVALID_PARAM\n"); break;
-+            case LIBUSB_ERROR_NOT_SUPPORTED  : printf("INFO: LIBUSB_ERROR_NOT_SUPPORTED \n"); break;
-+            default: printf("error code: %d\n", ret); break;
-+        }
++    ret = libusb_set_option(ftdi->usb_ctx, LIBUSB_OPTION_USE_USBDK);
++    if (ret != LIBUSB_SUCCESS)
++    {
++        fprintf(stderr, "libusb_set_option(LIBUSB_OPTION_USE_USBDK) failed: %d\n", ret);
 +    }
 +#endif
-+
-+    ret =libusb_set_option(ftdi->usb_ctx, LIBUSB_OPTION_LOG_LEVEL , LIBUSB_LOG_LEVEL_INFO);
-+    if(ret!=LIBUSB_SUCCESS ){
-+        printf("libusb_set_option(LIBUSB_OPTION_USE_USBDK) failed:\n");
-+        switch(ret){
-+            case LIBUSB_ERROR_INVALID_PARAM : printf("INFO: LIBUSB_ERROR_INVALID_PARAM\n"); break;
-+            case LIBUSB_ERROR_NOT_SUPPORTED  : printf("INFO: LIBUSB_ERROR_NOT_SUPPORTED \n"); break;
-+            default: printf("unknown error: %d\n", ret); break;
-+        }
-+    }
-+
 +
      ftdi_set_interface(ftdi, INTERFACE_ANY);
      ftdi->bitbang_mode = 1; /* when bitbang is enabled this holds the number of the mode  */
  
-@@ -564,36 +590,12 @@
+@@ -564,36 +576,12 @@
      return packet_size;
  }
  
@@ -72,7 +65,7 @@ diff -uNr libftdi1-1.4/src/ftdi.c libftdi1-1.4_patch/src/ftdi.c
      if (libusb_get_device_descriptor(dev, &desc) < 0)
          ftdi_error_return(-9, "libusb_get_device_descriptor() failed");
  
-@@ -686,6 +688,38 @@
+@@ -686,6 +674,38 @@
      ftdi_error_return(0, "all fine");
  }
  
@@ -105,13 +98,13 @@ diff -uNr libftdi1-1.4/src/ftdi.c libftdi1-1.4_patch/src/ftdi.c
 +    if (libusb_open(dev, &ftdi->usb_dev) < 0)
 +       ftdi_error_return(-4, "libusb_open() failed");
 +
-+    ftdi_usb_open_dev_continue(ftdi, dev);
++    return ftdi_usb_open_dev_continue(ftdi, dev);
 +}
 +
  /**
      Opens the first device with a given vendor and product ids.
  
-@@ -806,15 +840,15 @@
+@@ -806,15 +826,15 @@
                  }
              }
  

@@ -9,8 +9,10 @@ local pl = require'pl.import_into'()
 
 -- Copy all example files.
 local atScripts = {
-  ['../decode_eeprom.lua']        = '${install_base}/',
-  ['../erase_eeprom.lua']         = '${install_base}/',
+  ['../eeprom_decode.lua']        = '${install_base}/',
+  ['../eeprom_erase.lua']         = '${install_base}/',
+  ['../eeprom_read_bin.lua']      = '${install_base}/',
+  ['../eeprom_write_bin.lua']     = '${install_base}/',
   ['../test_bitbang_input.lua']   = '${install_base}/',
   ['../test_bitbang_output.lua']  = '${install_base}/'
 }

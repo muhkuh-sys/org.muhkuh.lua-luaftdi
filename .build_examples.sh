@@ -24,7 +24,7 @@ fi
 echo "Building jonchki for ${JONCHKI_PLATFORM_ID}"
 
 
-JONCHKI_VERSION=0.0.3.1
+JONCHKI_VERSION=0.0.4.1
 JONCHKI_VERBOSE=info
 
 # Get the project folder.

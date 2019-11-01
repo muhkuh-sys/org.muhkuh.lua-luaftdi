@@ -1107,6 +1107,75 @@ List *Context::usb_find_all(int vendor, int product)
 
 
 
+List *Context::usb_get_all(void)
+{
+	ssize_t sResult;
+	int iResult;
+	List *ptResult;
+	struct ftdi_device_list *ptDeviceList;
+	struct ftdi_device_list **pptDeviceListCnt;
+	struct ftdi_device_list *ptFtdiEntry;
+	libusb_device **pptDetectedDevices;
+	libusb_device **pptDetectedDevicesCnt;
+	libusb_device *ptDetectedDevice;
+	struct libusb_device_descriptor tDeviceDescriptor;
+
+
+	/* Be pessimistic... */
+	ptResult = NULL;
+
+	/* No devices detected yet. */
+	ptDeviceList = NULL;
+	pptDeviceListCnt = &ptDeviceList;
+
+	/* Get all devices from libusb. */
+	sResult = libusb_get_device_list(m_ptContext->usb_ctx, &pptDetectedDevices);
+	if( sResult>=0 )
+	{
+		/* Start at the beginning of the linked list. */
+		pptDetectedDevicesCnt = pptDetectedDevices;
+
+		/* Iterate over all elements of the linked list. */
+		while( *pptDetectedDevicesCnt!=NULL )
+		{
+			ptDetectedDevice = *pptDetectedDevicesCnt;
+
+			/* Get the device descriptor. */
+			iResult = libusb_get_device_descriptor(ptDetectedDevice, &tDeviceDescriptor);
+			/* Silently ignore devices which can not be accessed. */
+			if( iResult==0 )
+			{
+				/* Allocate a new list entry. */
+				ptFtdiEntry = (struct ftdi_device_list*)malloc(sizeof(struct ftdi_device_list));
+				if( ptFtdiEntry!=NULL )
+				{
+					/* Fill the new entry. */
+					ptFtdiEntry->next = NULL;
+					ptFtdiEntry->dev = ptDetectedDevice;
+					libusb_ref_device(ptDetectedDevice);
+
+					/* Move to the new top of the linked list. */
+					*pptDeviceListCnt = ptFtdiEntry;
+					pptDeviceListCnt = &(ptFtdiEntry->next);
+				}
+			}
+
+			/* Move to the next entry. */
+			++pptDetectedDevicesCnt;
+		}
+
+		/* Free the list of detected devices. */
+		libusb_free_device_list(pptDetectedDevices, 1);
+
+		/* Convert the device list to a class. */
+		ptResult = new List(m_ptContext, ptDeviceList);
+	}
+
+	return ptResult;
+}
+
+
+
 int Context::usb_open_dev(ListEntry *ptDevice)
 {
 	int iResult;

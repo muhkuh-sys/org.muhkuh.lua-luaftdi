@@ -476,6 +476,7 @@ public:
 
 	/* Device detection. */
 	List *usb_find_all(int vendor, int product);
+	List *usb_get_all(void);
 
 	/* Device opening / closing. */
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_open_dev(ListEntry *ptDevice);

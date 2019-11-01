@@ -59,6 +59,50 @@ ListEntry::~ListEntry(void)
 
 
 
+uint16_t ListEntry::get_vid(void)
+{
+	uint16_t uiResult;
+	int iResult;
+	struct libusb_device_descriptor tDeviceDescriptor;
+
+
+	uiResult = 0;
+	if( m_ptUsbDevice!=NULL )
+	{
+		iResult = libusb_get_device_descriptor(m_ptUsbDevice, &tDeviceDescriptor);
+		if( iResult==0 )
+		{
+			uiResult = tDeviceDescriptor.idVendor;
+		}
+	}
+
+	return uiResult;
+}
+
+
+
+uint16_t ListEntry::get_pid(void)
+{
+	uint16_t uiResult;
+	int iResult;
+	struct libusb_device_descriptor tDeviceDescriptor;
+
+
+	uiResult = 0;
+	if( m_ptUsbDevice!=NULL )
+	{
+		iResult = libusb_get_device_descriptor(m_ptUsbDevice, &tDeviceDescriptor);
+		if( iResult==0 )
+		{
+			uiResult = tDeviceDescriptor.idProduct;
+		}
+	}
+
+	return uiResult;
+}
+
+
+
 uint8_t ListEntry::get_bus_number(void)
 {
 	uint8_t uiResult;

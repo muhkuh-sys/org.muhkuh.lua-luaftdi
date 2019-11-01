@@ -366,6 +366,9 @@ public:
 	ListEntry(struct ftdi_context *ptContext, struct ftdi_device_list *ptDevice);
 	~ListEntry(void);
 
+	uint16_t get_vid(void);
+	uint16_t get_pid(void);
+
 	uint8_t get_bus_number(void);
 	void get_port_number(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT_LIST, unsigned int *uiNUMBER_OF_CREATED_OBJECTS);
 	void get_port_numbers(lua_State *MUHKUH_SWIG_OUTPUT_CUSTOM_OBJECT_LIST, unsigned int *uiNUMBER_OF_CREATED_OBJECTS);

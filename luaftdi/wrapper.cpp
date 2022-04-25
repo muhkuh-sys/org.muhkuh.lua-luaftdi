@@ -1351,6 +1351,42 @@ int Context::usb_reset(void)
 
 
 
+int Context::ftdi_tciflush(void)
+{
+	int iResult;
+
+
+	iResult = ftdi_tciflush();
+
+	return iResult;
+}
+
+
+
+int Context::ftdi_tcoflush(void)
+{
+	int iResult;
+
+
+	iResult = ftdi_tcoflush();
+
+	return iResult;
+}
+
+
+
+int Context::ftdi_tcioflush(void)
+{
+	int iResult;
+
+
+	iResult = ftdi_tcioflush();
+
+	return iResult;
+}
+
+
+
 int Context::set_baudrate(int baudrate)
 {
 	int iResult;
@@ -1490,6 +1526,24 @@ int Context::setflowctrl(int flowctrl)
 	else
 	{
 		iResult = ftdi_setflowctrl(m_ptContext, flowctrl);
+	}
+
+	return iResult;
+}
+
+
+int Context::setflowctrl_xonxoff(unsigned char xon, unsigned char xoff)
+{
+	int iResult;
+
+
+	if( m_ptContext==NULL )
+	{
+		iResult = -1;
+	}
+	else
+	{
+		iResult = ftdi_setflowctrl_xonxoff(m_ptContext, xon, xoff);
 	}
 
 	return iResult;

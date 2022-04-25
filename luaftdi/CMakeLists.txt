@@ -30,19 +30,23 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	# Select the LUA version.
 	INCLUDE(${CMAKE_HOME_DIRECTORY}/cmake/muhkuh_lua.cmake)
 
-	SET(libusb_DIR "${CMAKE_BINARY_DIR}/../external/libusb/install/cmake")
-	MESSAGE("libusb_DIR: ${libusb_DIR}")
-	FIND_PACKAGE(libusb CONFIG REQUIRED)
+	SET(LIBUSB_INCLUDE_DIR "${CMAKE_BINARY_DIR}/../external/libusb/install/include/libusb-1.0")
+	SET(LIBUSB_LIBRARIES "${CMAKE_BINARY_DIR}/../external/libusb/install/lib/libusb-1.0.a")
 
 	INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR})
 	INCLUDE_DIRECTORIES(${LUA_INCLUDE_DIR})
-	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../external/libftdi/libftdi1-1.4/src/TARGET_libftdi1/src)
+	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../external/libftdi/libftdi1-1.5/src/TARGET_libftdi1/src)
+	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/../external/libftdi/install/usr/local/include/libftdi1)
 	INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/swig_runtime)
+	INCLUDE_DIRECTORIES(${LIBUSB_INCLUDE_DIR})
 
 	SET_SOURCE_FILES_PROPERTIES(luaftdi.i PROPERTIES CPLUSPLUS ON)
 	SET_SOURCE_FILES_PROPERTIES(luaftdi.i PROPERTIES SWIG_FLAGS "")
 	SWIG_ADD_MODULE(TARGET_luaftdi lua luaftdi.i wrapper.cpp)
-	SWIG_LINK_LIBRARIES(TARGET_luaftdi ${LUA_LIBRARIES} ${CMAKE_BINARY_DIR}/../external/libftdi/install/usr/local/lib/libftdi1.a libusb::TARGET_libusb)
+	IF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+		SWIG_LINK_LIBRARIES(TARGET_luaftdi ${LUA_LIBRARIES})
+	ENDIF((${CMAKE_SYSTEM_NAME} STREQUAL "Windows") AND (${CMAKE_COMPILER_IS_GNUCC}))
+	SWIG_LINK_LIBRARIES(TARGET_luaftdi ${CMAKE_BINARY_DIR}/../external/libftdi/install/usr/local/lib/libftdi1.a ${LIBUSB_LIBRARIES})
 	ADD_DEPENDENCIES(TARGET_luaftdi TARGET_swigluarun)
 
 	# Set the name of the output file to "luaftdi".

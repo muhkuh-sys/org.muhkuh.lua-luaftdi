@@ -1351,63 +1351,6 @@ int Context::usb_reset(void)
 
 
 
-int Context::usb_purge_rx_buffer(void)
-{
-	int iResult;
-
-
-	if( m_ptContext==NULL )
-	{
-		iResult = -1;
-	}
-	else
-	{
-		iResult = ftdi_usb_purge_rx_buffer(m_ptContext);
-	}
-
-	return iResult;
-}
-
-
-
-int Context::usb_purge_tx_buffer(void)
-{
-	int iResult;
-
-
-	if( m_ptContext==NULL )
-	{
-		iResult = -1;
-	}
-	else
-	{
-		iResult = ftdi_usb_purge_tx_buffer(m_ptContext);
-	}
-
-	return iResult;
-}
-
-
-
-int Context::usb_purge_buffers(void)
-{
-	int iResult;
-
-
-	if( m_ptContext==NULL )
-	{
-		iResult = -1;
-	}
-	else
-	{
-		iResult = ftdi_usb_purge_buffers(m_ptContext);
-	}
-
-	return iResult;
-}
-
-
-
 int Context::set_baudrate(int baudrate)
 {
 	int iResult;

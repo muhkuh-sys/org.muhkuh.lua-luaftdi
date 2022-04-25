@@ -1,13 +1,13 @@
-diff -uNr libftdi1-1.4/src/CMakeLists.txt libftdi1-1.4_patched/src/CMakeLists.txt
---- libftdi1-1.4/src/CMakeLists.txt	2019-02-23 16:10:43.399774206 +0100
-+++ libftdi1-1.4_patched/src/CMakeLists.txt	2019-02-23 15:26:54.998142879 +0100
+diff -uNr libftdi1-1.5/src/CMakeLists.txt libftdi1-1.5_patched/src/CMakeLists.txt
+--- libftdi1-1.5/src/CMakeLists.txt	2020-07-07 21:32:55.000000000 +0200
++++ libftdi1-1.5_patched/src/CMakeLists.txt	2022-04-20 17:54:17.061063421 +0200
 @@ -40,6 +40,9 @@
  
  if ( STATICLIBS )
    add_library(ftdi1-static STATIC ${c_sources})
-+  IF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
++  IF("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 +    target_compile_options(ftdi1-static PRIVATE -fPIC)
-+  ENDIF("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
-   target_link_libraries(ftdi1-static libusb::TARGET_libusb)
++  ENDIF("${CMAKE_C_COMPILER_ID}" STREQUAL "GNU"  AND  "${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
+   target_link_libraries(ftdi1-static ${LIBUSB_LIBRARIES})
    set_target_properties(ftdi1-static PROPERTIES OUTPUT_NAME "ftdi1")
    set_target_properties(ftdi1-static PROPERTIES CLEAN_DIRECT_OUTPUT 1)

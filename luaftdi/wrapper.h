@@ -87,11 +87,13 @@ enum FTDI_INTERFACE
 	__ENUM_INTERFACE_D = INTERFACE_D
 };
 
+
 /** Automatic loading / unloading of kernel modules */
 enum FTDI_MODULE_DETACH_MODE
 {
 	__ENUM_AUTO_DETACH_SIO_MODULE = AUTO_DETACH_SIO_MODULE,
-	__ENUM_DONT_DETACH_SIO_MODULE = DONT_DETACH_SIO_MODULE
+	__ENUM_DONT_DETACH_SIO_MODULE = DONT_DETACH_SIO_MODULE,
+	__ENUM_AUTO_DETACH_REATACH_SIO_MODULE = AUTO_DETACH_REATACH_SIO_MODULE
 };
 
 enum FTDI_MPSSE
@@ -151,8 +153,8 @@ enum FTDI_MPSSE
 	__ENUM_SIO_WRITE_EEPROM_REQUEST = SIO_WRITE_EEPROM_REQUEST,
 	__ENUM_SIO_ERASE_EEPROM_REQUEST = SIO_ERASE_EEPROM_REQUEST,
 	__ENUM_SIO_RESET_SIO = SIO_RESET_SIO,
-	__ENUM_SIO_RESET_PURGE_RX = SIO_RESET_PURGE_RX,
-	__ENUM_SIO_RESET_PURGE_TX = SIO_RESET_PURGE_TX,
+	__ENUM_SIO_TCIFLUSH = SIO_TCIFLUSH,
+	__ENUM_SIO_TCOFLUSH = SIO_TCOFLUSH,
 	__ENUM_SIO_DISABLE_FLOW_CTRL = SIO_DISABLE_FLOW_CTRL,
 	__ENUM_SIO_RTS_CTS_HS = SIO_RTS_CTS_HS,
 	__ENUM_SIO_DTR_DSR_HS = SIO_DTR_DSR_HS,
@@ -489,9 +491,9 @@ public:
 
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_interface(enum ftdi_interface interface);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_reset(void);
-	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_purge_rx_buffer(void);
-	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_purge_tx_buffer(void);
-	RESULT_INT_TRUE_OR_NIL_WITH_ERR usb_purge_buffers(void);
+	RESULT_INT_TRUE_OR_NIL_WITH_ERR ftdi_tciflush(void);
+	RESULT_INT_TRUE_OR_NIL_WITH_ERR ftdi_tcoflush(void);
+	RESULT_INT_TRUE_OR_NIL_WITH_ERR ftdi_tcioflush(void);
 
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_baudrate(int baudrate);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_line_property(enum ftdi_bits_type bits, enum ftdi_stopbits_type sbit, enum ftdi_parity_type parity);
@@ -501,6 +503,7 @@ public:
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR set_latency_timer(unsigned char latency);
 	RESULT_INT_NOTHING_OR_NIL_WITH_ERR get_latency_timer(unsigned char *pucARGUMENT_OUT);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR setflowctrl(int flowctrl);
+	RESULT_INT_TRUE_OR_NIL_WITH_ERR setflowctrl_xonxoff(unsigned char xon, unsigned char xoff);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR setdtr(int state);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR setrts(int state);
 	RESULT_INT_TRUE_OR_NIL_WITH_ERR setdtr_rts(int dtr, int rts);

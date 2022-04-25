@@ -8,6 +8,6 @@
 	      extension="zip"/>
 	<dependencies>
 		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.1-luaftdi" version="@PROJECT_VERSION@"/>
-		<dependency group="com.github.mpeterv" module="argparse" artifact="argparse" version="0.5.0.1"/>
+		<dependency group="com.github.mpeterv" module="argparse" artifact="argparse" version="0"/>
 	</dependencies>
 </jonchki-artifact>

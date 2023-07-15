@@ -7,9 +7,7 @@ t:install{
   ['../eeprom_read_bin.lua']      = '${install_base}/',
   ['../eeprom_write_bin.lua']     = '${install_base}/',
   ['../test_bitbang_input.lua']   = '${install_base}/',
-  ['../test_bitbang_output.lua']  = '${install_base}/',
-
-  ['../linux/muhkuh_cli_init.lua'] = '${install_base}/'
+  ['../test_bitbang_output.lua']  = '${install_base}/'
 }
 
 return true

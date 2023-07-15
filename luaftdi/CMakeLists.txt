@@ -83,29 +83,16 @@ IF((${BUILDCFG_ONLY_JONCHKI_CFG} STREQUAL "OFF"))
 	SET(CPACK_GENERATOR "TXZ")
 	INCLUDE(CPack)
 
-	IF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a windows build.
+	# Package a linux build.
 
-		# NOTE: Do not install the library again, there is an "INSTALL" already.
+	# NOTE: Do not install the library again, there is an "INSTALL" already.
 
-		CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_windows.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
+	CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
+	               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+	               @ONLY)
 
-		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		        DESTINATION .)
-	ELSE(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
-		# Package a linux build.
-
-		# NOTE: Do not install the library again, there is an "INSTALL" already.
-
-		CONFIGURE_FILE(installer/lua${BUILDCFG_LUA_VERSION}/install_linux.lua
-		               ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		               @ONLY)
-
-		INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
-		        DESTINATION .)
-	ENDIF(${JONCHKI_PLATFORM_DIST_ID} STREQUAL "windows")
+	INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/package/install.lua
+	        DESTINATION .)
 
 	INSTALL(FILES usb_tree_matcher.lua
 	        DESTINATION lua)

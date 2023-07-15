@@ -1,19 +1,15 @@
-require 'muhkuh_cli_init'
 local ftdi = require 'luaftdi'
 local argparse = require 'argparse'
 
 
-function hexdump(strData, uiBytesPerRow)
-  local uiCnt
-  local uiByteCnt
+local function hexdump(strData, uiBytesPerRow)
   local aDump
-
 
   if not uiBytesPerRow then
     uiBytesPerRow = 16
   end
 
-  uiByteCnt = 0
+  local uiByteCnt = 0
   for uiCnt=1,strData:len() do
     if uiByteCnt==0 then
       aDump = { string.format("%08X :", uiCnt-1) }
@@ -66,7 +62,14 @@ if string.len(strEepromData)~=256 then
 end
 
 local tVersionInfo = ftdi.get_library_version()
-print(string.format("[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s", tVersionInfo.major, tVersionInfo.minor, tVersionInfo.micro, tVersionInfo.version_str, tVersionInfo.snapshot_str))
+print(string.format(
+  "[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s",
+  tVersionInfo.major,
+  tVersionInfo.minor,
+  tVersionInfo.micro,
+  tVersionInfo.version_str,
+  tVersionInfo.snapshot_str
+))
 
 -- Create a new FTDI context.
 local tContext = ftdi.Context()
@@ -104,7 +107,7 @@ assert(tResult, strError)
 
 tResult, strError = tEeprom:build()
 if tResult<0 then
-  error('Failed to build the eeprom buffer.')
+  error('Failed to build the eeprom buffer: ' .. tostring(strError))
 else
   print(string.format('Created EEPROM data with %d bytes.', tResult))
 end

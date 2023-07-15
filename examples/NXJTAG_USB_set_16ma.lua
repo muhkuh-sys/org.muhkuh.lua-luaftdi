@@ -4,7 +4,14 @@ local ulUSBVendor, ulUSBProduct = 0x1939, 0x0023
 
 
 local tVersionInfo = ftdi.get_library_version()
-print(string.format("[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s", tVersionInfo.major, tVersionInfo.minor, tVersionInfo.micro, tVersionInfo.version_str, tVersionInfo.snapshot_str))
+print(string.format(
+  "[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s",
+  tVersionInfo.major,
+  tVersionInfo.minor,
+  tVersionInfo.micro,
+  tVersionInfo.version_str,
+  tVersionInfo.snapshot_str
+))
 
 -- Create a new FTDI context.
 local tContext = ftdi.Context()

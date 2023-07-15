@@ -3,7 +3,7 @@
 -- @module UsbTreeMatcher
 -- @author Christoph Thelen
 -- @license GPL-v2
--- @copyright 
+-- @copyright
 
 local class = require 'pl.class'
 local UsbTreeMatcher = class()
@@ -27,11 +27,10 @@ function UsbTreeMatcher:__rescan()
 
   -- Create a new FTDI context and get all USB devices.
   tLog.debug('Get a list of all USB devices.')
-  local tContext = luaftdi.Context()
+  local tContext = self.luaftdi.Context()
   local tDeviceList = tContext:usb_get_all()
   if tDeviceList==nil then
     tContext:close()
-    tContext = nil
     tLog.error('Failed to get all USB devices.')
   else
     atDetectedDevices = {}
@@ -93,7 +92,6 @@ function UsbTreeMatcher:search(atDevices, fForceRescan)
   end
   if fDoRescan==true then
     self:__rescan()
-    tDeviceList = self.tDeviceList
   end
 
   local tDeviceList = self.tDeviceList
@@ -108,9 +106,9 @@ function UsbTreeMatcher:search(atDevices, fForceRescan)
     local strMatchingPrefix = nil
     for strPath, tDetectedDevice in pairs(tDeviceList) do
       -- Does the device match one of the expected devices?
-      for strDeviceName, v in pairs(atDevices) do
-        strExpectedVidPid = v[1]
-        strExpectedPath = v[2]
+      for _, v in pairs(atDevices) do
+        local strExpectedVidPid = v[1]
+        local strExpectedPath = v[2]
         if tDetectedDevice.vidpid==strExpectedVidPid then
           local strPrefix = nil
           -- Does the last part of the path match?
@@ -128,11 +126,11 @@ function UsbTreeMatcher:search(atDevices, fForceRescan)
           if strPrefix~=nil then
             -- Now look for all expected devices with this prefix.
             local fOk = true
-            for uiTestMatrixDeviceNumber, v in pairs(atDevices) do
-              strPathEnd = v[2]
-              strVidPid = v[1]
-              local strPath = strPrefix .. strPathEnd
-              local tDevice = tDeviceList[strPath]
+            for _, vv in pairs(atDevices) do
+              local strPathEnd = vv[2]
+              local strVidPid = vv[1]
+              local strPath2 = strPrefix .. strPathEnd
+              local tDevice = tDeviceList[strPath2]
               if tDevice==nil then
                 fOk = false
                 break

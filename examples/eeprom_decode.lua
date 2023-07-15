@@ -1,4 +1,3 @@
-require 'muhkuh_cli_init'
 local ftdi = require 'luaftdi'
 local argparse = require 'argparse'
 
@@ -28,9 +27,7 @@ local ulUSBVendor = tonumber('0x' .. strVID)
 local ulUSBProduct = tonumber('0x' .. strPID)
 
 
-function hexdump(strData, uiBytesPerRow)
-  local uiCnt
-  local uiByteCnt
+local function hexdump(strData, uiBytesPerRow)
   local aDump
 
 
@@ -38,7 +35,7 @@ function hexdump(strData, uiBytesPerRow)
     uiBytesPerRow = 16
   end
 
-  uiByteCnt = 0
+  local uiByteCnt = 0
   for uiCnt=1,strData:len() do
     if uiByteCnt==0 then
       aDump = { string.format("%08X :", uiCnt-1) }
@@ -57,7 +54,14 @@ end
 
 
 local tVersionInfo = ftdi.get_library_version()
-print(string.format("[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s", tVersionInfo.major, tVersionInfo.minor, tVersionInfo.micro, tVersionInfo.version_str, tVersionInfo.snapshot_str))
+print(string.format(
+  "[FTDI version] major: %d, minor: %d, micro: %d, version_str: %s, snapshot_str: %s",
+  tVersionInfo.major,
+  tVersionInfo.minor,
+  tVersionInfo.micro,
+  tVersionInfo.version_str,
+  tVersionInfo.snapshot_str
+))
 
 -- Create a new FTDI context.
 local tContext = ftdi.Context()
@@ -80,7 +84,8 @@ print()
 assert(tResult, strError)
 
 -- Get the vendor and product strings.
--- NOTE: The strings are padded with 0x00 bytes at the end. Cut them off or all further string operations will have problems.
+-- NOTE: The strings are padded with 0x00 bytes at the end. Cut them off or all further string operations will
+--       have problems.
 local strVendor = tEeprom:get_manufacturer()
 while string.byte(strVendor, -1)==0 do
   strVendor = string.sub(strVendor, 1, -2)

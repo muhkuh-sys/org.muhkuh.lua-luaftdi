@@ -7,7 +7,20 @@
 	      vcs-id="@PROJECT_VERSION_VCS@"
 	      extension="zip"/>
 	<dependencies>
-		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.1-luaftdi" version="@PROJECT_VERSION@"/>
+		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.4-luaftdi" version="@PROJECT_VERSION@"/>
 		<dependency group="com.github.mpeterv" module="argparse" artifact="argparse" version="0"/>
 	</dependencies>
+	<actions>
+		<action name="finalizer" file="${prj_root}/../../../examples/jonchki/finalizer.lua"/>
+		<action name="pack" path="${install_base}">
+			local t = ...
+			local tResult = true
+
+			t:createPackageFile()
+			t:createHashFile()
+			t:createArchive('${prj_root}/../../repository/${default_archive_name}', 'native')
+
+			return tResult
+		</action>
+	</actions>
 </jonchki-artifact>

@@ -1,9 +1,8 @@
-#! /usr/bin/python2.7
+#! /usr/bin/python3
 
 from jonchki import cli_args
 from jonchki import install
 from jonchki import jonchkihere
-from jonchki import vcs_id
 
 import glob
 import os
@@ -36,7 +35,7 @@ strCfg_jonchkiHerePath = os.path.join(
     'jonchki'
 )
 # This is the Jonchki version to use.
-strCfg_jonchkiVersion = '0.0.7.1'
+strCfg_jonchkiVersion = '0.0.11.1'
 # Look in this folder for Jonchki archives before downloading them.
 strCfg_jonchkiLocalArchives = os.path.join(
     strCfg_projectFolder,
@@ -176,13 +175,6 @@ strJonchki = jonchkihere.install(
     LOCAL_ARCHIVES=strCfg_jonchkiLocalArchives
 )
 
-# Try to get the VCS ID.
-strProjectVersionVcs, strProjectVersionVcsLong = vcs_id.get(
-    strCfg_projectFolder
-)
-print(strProjectVersionVcs, strProjectVersionVcsLong)
-
-
 # ---------------------------------------------------------------------------
 #
 # Get the build requirements for LUA5.1 and the externals.
@@ -206,16 +198,28 @@ astrCmd.append(strCfg_projectFolder)
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 subprocess.check_call(strMake, shell=True, cwd=strCwd, env=astrEnv)
 
-astrMatch = glob.glob(os.path.join(strCwd, 'lua5.1-luaftdi-*.xml'))
+astrMatch = glob.glob(os.path.join(strCwd, 'lua5.4-luaftdi-*.xml'))
 if len(astrMatch) != 1:
-    raise Exception('No match found for "lua5.1-luaftdi-*.xml".')
+    raise Exception('No match found for "lua5.4-luaftdi-*.xml".')
 
 astrCmd = [
     strJonchki,
     'install-dependencies',
     '--verbose', strCfg_jonchkiVerbose,
     '--syscfg', strCfg_jonchkiSystemConfiguration,
-    '--prjcfg', strCfg_jonchkiProjectConfiguration
+    '--prjcfg', strCfg_jonchkiProjectConfiguration,
+
+    '--logfile', os.path.join(
+        strCfg_workingFolder,
+        'lua5.4',
+        'build_requirements',
+        'jonchki.log'
+    ),
+
+    '--dependency-log', os.path.join(
+        strCfg_projectFolder,
+        'dependency-log.xml'
+    )
 ]
 astrCmd.extend(astrJONCHKI_SYSTEM)
 astrCmd.append('--build-dependencies')
@@ -316,7 +320,6 @@ strCwd = os.path.join(strCfg_workingFolder, 'lua5.4')
 subprocess.check_call(' '.join(astrCmd), shell=True, cwd=strCwd, env=astrEnv)
 subprocess.check_call('%s pack' % strMake, shell=True, cwd=strCwd, env=astrEnv)
 
-
 # ---------------------------------------------------------------------------
 #
 # Build the examples.
@@ -327,7 +330,6 @@ astrCmd = [
     '--verbose', strCfg_jonchkiVerbose,
     '--syscfg', os.path.join(strCfg_projectFolder, 'examples', 'jonchki', 'jonchkisys.cfg'),
     '--prjcfg', os.path.join(strCfg_projectFolder, 'examples', 'jonchki', 'jonchkicfg.xml'),
-    '--finalizer', os.path.join(strCfg_projectFolder, 'examples', 'jonchki', 'finalizer.lua'),
     '--dependency-log', os.path.join(strCfg_projectFolder, 'dependency-log.xml')
 ]
 astrCmd.extend(astrJONCHKI_SYSTEM)

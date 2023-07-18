@@ -292,7 +292,7 @@ astrCmd = [
     '--verbose', strCfg_jonchkiVerbose,
     '--syscfg', os.path.join(strCfg_projectFolder, 'examples', 'jonchki', 'jonchkisys.cfg'),
     '--prjcfg', os.path.join(strCfg_projectFolder, 'examples', 'jonchki', 'jonchkicfg.xml'),
-    '--dependency-log', os.path.join(strCfg_projectFolder, 'dependency-log.xml')
+    '--dependency-log', os.path.join(strCfg_projectFolder, 'dependency-log-examples.xml')
 ]
 astrCmd.extend(astrJONCHKI_SYSTEM)
 astrCmd.append(os.path.join(strCfg_workingFolder, 'examples', 'luaftdi-examples.xml'))

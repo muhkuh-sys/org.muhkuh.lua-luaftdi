@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependency-log>
 	<dependencies>
+		<dependency group="com.github.mpeterv" module="argparse" artifact="argparse" version="0.6.0.2"/>
 		<dependency group="org.lua" module="lua" artifact="lua" version="5.4.6.2"/>
 		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="lua5.4-luaftdi" version="1.2.1"/>
+		<dependency group="org.muhkuh.lua" module="luaftdi" artifact="luaftdi-examples" version="1.2.1"/>
 	</dependencies>
 	<build-dependencies>
 	</build-dependencies>
